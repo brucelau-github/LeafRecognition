@@ -38,7 +38,7 @@ from datasets import dataset_utils
 
 
 # The number of images in the validation set.
-_NUM_VALIDATION = 2
+_NUM_VALIDATION = 10
 
 # Seed for repeatability.
 _RANDOM_SEED = 0
@@ -78,11 +78,11 @@ def _get_filenames_and_classes(dataset_dir):
     A list of image file paths, relative to `dataset_dir` and the list of
     subdirectories, representing class names.
   """
-  flower_root = os.path.join(dataset_dir, 'flower_photos')
+
   directories = []
   class_names = []
-  for filename in os.listdir(flower_root):
-    path = os.path.join(flower_root, filename)
+  for filename in os.listdir(dataset_dir):
+    path = os.path.join(dataset_dir, filename)
     if os.path.isdir(path):
       directories.append(path)
       class_names.append(filename)
@@ -154,12 +154,12 @@ def _clean_up_temporary_files(dataset_dir):
   Args:
     dataset_dir: The directory where the temporary files are stored.
   """
-  filename = _DATA_URL.split('/')[-1]
-  filepath = os.path.join(dataset_dir, filename)
-  tf.gfile.Remove(filepath)
-
-  tmp_dir = os.path.join(dataset_dir, 'flower_photos')
-  tf.gfile.DeleteRecursively(tmp_dir)
+  # filename = _DATA_URL.split('/')[-1]
+  # filepath = os.path.join(dataset_dir, filename)
+  # tf.gfile.Remove(filepath)
+  #
+  # tmp_dir = os.path.join(dataset_dir, 'flower_photos')
+  # tf.gfile.DeleteRecursively(tmp_dir)
 
 
 def _dataset_exists(dataset_dir):
