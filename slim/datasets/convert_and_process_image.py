@@ -38,7 +38,7 @@ from datasets import dataset_utils
 
 
 # The number of images in the validation set.
-_NUM_VALIDATION = 10
+_NUM_VALIDATION = 2
 
 # Seed for repeatability.
 _RANDOM_SEED = 0
