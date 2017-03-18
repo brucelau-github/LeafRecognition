@@ -31,7 +31,7 @@ def inference(image):
     if not tf.gfile.Exists(image):
         tf.logging.fatal('File does not exist %s', image)
 
-    checkpoint_dir = '/home/brucelau/workbench/leafinception'
+    checkpoint_dir = '/home/brucelau/workbench/data/checkpoints'
     input_tensor = tf.placeholder(tf.float32, [None, 299, 299, 3])
     sess = tf.Session()
     arg_scope = inception_v3_arg_scope()
@@ -59,6 +59,6 @@ def inference(image):
 
 
 if __name__ == "__main__":
-    sample_images = '/home/brucelau/workbench/dataset/leaf_photos/norway_maple/1249060544_0002.jpg'
+    sample_images = '/home/brucelau/workbench/data/leaf_photos/norway_maple/1249060544_0002.jpg'
     image, predict = inference(sample_images)
-    print 'the porn score with the {0} is {1} '.format(image, predict)
+    print 'the score with the {0} is {1} '.format(image, predict)
