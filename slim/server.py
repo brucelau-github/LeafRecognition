@@ -31,15 +31,19 @@ def inference(image):
 
 def receive_signal(signum, stack):
 	print 'Received:', signum
-	predict = inference('/home/brucelau/workbench/data/leaf_photos/norway_maple/1249060544_0003.jpg')
+	predict = inference('/tmp/infer_img')
 	outf = open("/tmp/py_server_out","w")
-	outf.write(str(time.time()))
-	outf.write("norway_maple:{0}".format(predict[0][0]))
-	outf.write("siberian_crab_apple:{0}".format(predict[0][1]))
-	outf.write("siberian_elm:{0}".format(predict[0][2]))
-	outf.write("silver_maple:{0}".format(predict[0][3]))
-	outf.write("yellow_buckeye:{0}".format(predict[0][4]))
+	outf.write("[norway_maple:{0}]".format(predict[0][0]))
+	outf.write("[siberian_crab_apple:{0}]".format(predict[0][1]))
+	outf.write("[siberian_elm:{0}]".format(predict[0][2]))
+	outf.write("[silver_maple:{0}]".format(predict[0][3]))
+	outf.write("[yellow_buckeye:{0}]".format(predict[0][4]))
 	outf.close()
+	cpidf = open("/tmp/cli_pid","r")
+	cpid = cpidf.readline()
+	os.kill( int(cpid), signal.SIGUSR1)
+	cpidf.close()
+
 	print 'the predict is :'
 	print 'norway_maple:',predict[0][0]
 	print 'siberian_crab_apple:',predict[0][1]
