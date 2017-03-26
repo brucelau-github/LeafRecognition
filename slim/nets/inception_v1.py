@@ -270,7 +270,7 @@ def inception_v1(inputs,
     is_training: whether is training or not.
     dropout_keep_prob: the percentage of activation values that are retained.
     prediction_fn: a function to get predictions out of logits.
-    spatial_squeeze: if True, logits is of shape is [B, C], if false logits is
+    spatial_squeeze: if True, logits is of shape [B, C], if false logits is
         of shape [B, 1, 1, C], where B is batch_size and C is number of classes.
     reuse: whether or not the network and its variables should be reused. To be
       able to reuse 'scope' must be given.
@@ -289,7 +289,7 @@ def inception_v1(inputs,
                         is_training=is_training):
       net, end_points = inception_v1_base(inputs, scope=scope)
       with tf.variable_scope('Logits'):
-        net = slim.avg_pool2d(net, [7, 7], stride=1, scope='MaxPool_0a_7x7')
+        net = slim.avg_pool2d(net, [7, 7], stride=1, scope='AvgPool_0a_7x7')
         net = slim.dropout(net,
                            dropout_keep_prob, scope='Dropout_0b')
         logits = slim.conv2d(net, num_classes, [1, 1], activation_fn=None,

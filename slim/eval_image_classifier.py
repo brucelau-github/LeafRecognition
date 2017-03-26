@@ -153,7 +153,7 @@ def main(_):
     # Define the metrics:
     names_to_values, names_to_updates = slim.metrics.aggregate_metric_map({
         'Accuracy': slim.metrics.streaming_accuracy(predictions, labels),
-        'Recall@5': slim.metrics.streaming_recall_at_k(
+        'Recall_5': slim.metrics.streaming_recall_at_k(
             logits, labels, 5),
     })
 
@@ -183,7 +183,7 @@ def main(_):
         checkpoint_path=checkpoint_path,
         logdir=FLAGS.eval_dir,
         num_evals=num_batches,
-        eval_op=names_to_updates.values(),
+        eval_op=list(names_to_updates.values()),
         variables_to_restore=variables_to_restore)
 
 

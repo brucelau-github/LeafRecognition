@@ -18,11 +18,14 @@ evaluation with a computational cost of 5 billion multiply-adds per inference
 and with using less than 25 million parameters. Below is a visualization of the
 model architecture.
 
-<center>
 ![Inception-v3 Architecture](g3doc/inception_v3_architecture.png)
-</center>
 
 ## Description of Code
+
+**NOTE**: For the most part, you will find a newer version of this code at [models/slim](https://github.com/tensorflow/models/tree/master/slim). In particular:
+
+*   `inception_train.py` and `imagenet_train.py` should no longer be used. The slim editions for running on multiple GPUs are the current best examples.
+*   `inception_distributed_train.py` and `imagenet_distributed_train.py` are still valid examples of distributed training.
 
 The code base provides three core binaries for:
 
@@ -55,11 +58,6 @@ For more details about TensorFlow-Slim, please see the [Slim README]
 subsequent research.
 
 ## Getting Started
-
-**NOTE** Before doing anything, we first need to build TensorFlow from source,
-and installed as a PIP package. Please follow the instructions at [Installing
-From Source]
-(https://www.tensorflow.org/get_started/os_setup.html#create-the-pip-package-and-install).
 
 Before you run the training script for the first time, you will need to download
 and convert the ImageNet data to native TFRecord format. The TFRecord format
@@ -470,14 +468,14 @@ look like:
 ```
 
 When the script finishes you will find 2 shards for the training and validation
-files in the `DATA_DIR`. The files will match the patterns `train-????-of-00001`
-and `validation-?????-of-00001`, respectively.
+files in the `DATA_DIR`. The files will match the patterns `train-?????-of-00002`
+and `validation-?????-of-00002`, respectively.
 
 **NOTE** If you wish to prepare a custom image data set for transfer learning,
 you will need to invoke [`build_image_data.py`](inception/data/build_image_data.py) on
 your custom data set. Please see the associated options and assumptions behind
 this script by reading the comments section of [`build_image_data.py`]
-(inception/data/build_image_data.py). Also, if your custom data has a different 
+(inception/data/build_image_data.py). Also, if your custom data has a different
 number of examples or classes, you need to change the appropriate values in
 [`imagenet_data.py`](inception/imagenet_data.py).
 
@@ -599,7 +597,7 @@ We find that the evaluation arrives at roughly 93.4% precision@1 after the model
 has been running for 2000 steps.
 
 ```shell
-Succesfully loaded model from /tmp/flowers/model.ckpt-1999 at step=1999.
+Successfully loaded model from /tmp/flowers/model.ckpt-1999 at step=1999.
 2016-03-01 16:52:51.761219: starting evaluation on (validation).
 2016-03-01 16:53:05.450419: [20 batches out of 20] (36.5 examples/sec; 0.684sec/batch)
 2016-03-01 16:53:05.450471: precision @ 1 = 0.9340 recall @ 5 = 0.9960 [500 examples]
@@ -633,6 +631,15 @@ reside within `$TRAIN_DIR` and `$VALIDATION_DIR` arranged as such:
   $VALIDATION_DIR/cat/that-image.jpg
   $VALIDATION_DIR/cat/cat.JPG
   ...
+```
+**NOTE**: This script will append an extra background class indexed at 0, so
+your class labels will range from 0 to num_labels. Using the example above, the
+corresponding class labels generated from `build_image_data.py` will be as
+follows:
+```shell
+0
+1 dog
+2 cat
 ```
 
 Each sub-directory in `$TRAIN_DIR` and `$VALIDATION_DIR` corresponds to a unique
@@ -686,26 +693,26 @@ class.
 After running this script produces files that look like the following:
 
 ```shell
-  $TRAIN_DIR/train-00000-of-00024
-  $TRAIN_DIR/train-00001-of-00024
+  $TRAIN_DIR/train-00000-of-00128
+  $TRAIN_DIR/train-00001-of-00128
   ...
-  $TRAIN_DIR/train-00023-of-00024
+  $TRAIN_DIR/train-00127-of-00128
 
 and
 
-  $VALIDATION_DIR/validation-00000-of-00008
-  $VALIDATION_DIR/validation-00001-of-00008
+  $VALIDATION_DIR/validation-00000-of-00024
+  $VALIDATION_DIR/validation-00001-of-00024
   ...
-  $VALIDATION_DIR/validation-00007-of-00008
+  $VALIDATION_DIR/validation-00023-of-00024
 ```
 
-where 24 and 8 are the number of shards specified for each dataset,
+where 128 and 24 are the number of shards specified for each dataset,
 respectively. Generally speaking, we aim for selecting the number of shards such
 that roughly 1024 images reside in each shard. Once this data set is built, you
 are ready to train or fine-tune an Inception model on this data set.
 
-Note, if you are piggy backing on the flowers retraining scripts, be sure to 
-update `num_classes()` and `num_examples_per_epoch()` in `flowers_data.py` 
+Note, if you are piggy backing on the flowers retraining scripts, be sure to
+update `num_classes()` and `num_examples_per_epoch()` in `flowers_data.py`
 to correspond with your data.
 
 ## Practical Considerations for Training a Model
