@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/home/liu1ee/app/virtualenv/bin/python
 import signal
 import os,time
 import tensorflow as tf
@@ -10,7 +10,8 @@ sys.path.append("..")
 
 sess = tf.Session()
 
-checkpoint_dir = '/home/brucelau/workbench/data/checkpoints'
+checkpoint_dir = '/home/liu1ee/workspace/LeafRecogition/checkpoints'
+#checkpoint_dir = '/home/liu1ee/workspace/LeafRecogition/trainlogs'
 input_tensor = tf.placeholder(tf.float32, [None, 299, 299, 3])
 arg_scope = inception_v3_arg_scope()
 with slim.arg_scope(arg_scope):
@@ -20,8 +21,11 @@ ckpt = tf.train.latest_checkpoint(checkpoint_dir)
 saver.restore(sess, ckpt)
 
 def inference(image):
-	im = Image.open(image).resize((299, 299))
-	im = Image.open(image).resize((299, 299))
+	try:
+		im = Image.open(image).resize((299, 299))
+	except Exception, e:
+		print "Fail to open image"
+		return 1
 	im = np.array(im) / 255.0
 	im = im.reshape(-1, 299, 299, 3)
 	start = time.time()
@@ -33,11 +37,14 @@ def receive_signal(signum, stack):
 	print 'Received:', signum
 	predict = inference('/tmp/infer_img')
 	outf = open("/tmp/py_server_out","w")
-	outf.write("[norway_maple:{0}]".format(predict[0][0]))
-	outf.write("[siberian_crab_apple:{0}]".format(predict[0][1]))
-	outf.write("[siberian_elm:{0}]".format(predict[0][2]))
-	outf.write("[silver_maple:{0}]".format(predict[0][3]))
-	outf.write("[yellow_buckeye:{0}]".format(predict[0][4]))
+	if isinstance(predict,int):
+		outf.write("format error")
+	else:
+		outf.write("[norway_maple:{0}]".format(predict[0][0]))
+		outf.write("[siberian_crab_apple:{0}]".format(predict[0][1]))
+		outf.write("[siberian_elm:{0}]".format(predict[0][2]))
+		outf.write("[silver_maple:{0}]".format(predict[0][3]))
+		outf.write("[yellow_buckeye:{0}]".format(predict[0][4]))
 	outf.close()
 	cpidf = open("/tmp/cli_pid","r")
 	cpid = cpidf.readline()

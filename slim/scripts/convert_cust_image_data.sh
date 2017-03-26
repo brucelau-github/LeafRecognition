@@ -11,7 +11,7 @@
 
 
 # Where the dataset is saved to.
-DATASET_DIR=/home/brucelau/workbench/data/leaf_photos
+DATASET_DIR=/home/liu1ee/workspace/LeafRecogition/leaf_photos
 
 # Download the pre-trained checkpoint.
 if [ ! -d "$DATASET_DIR" ]; then

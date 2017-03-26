@@ -10,13 +10,13 @@
 # ./slim/scripts/finetune_inceptionv3_on_flowers.sh
 
 # Where the pre-trained InceptionV3 checkpoint is saved to.
-PRETRAINED_CHECKPOINT_DIR=/home/brucelau/workbench/checkpoints
+PRETRAINED_CHECKPOINT_DIR=/home/liu1ee/workspace/LeafRecogition/ckpt
 
 # Where the training (fine-tuned) checkpoint and logs will be saved to.
-TRAIN_DIR=/home/brucelau/workbench/trainlogs
+TRAIN_DIR=/home/liu1ee/workspace/LeafRecogition/trainlogs
 
 # Where the dataset (TFRecords format)is saved to.
-DATASET_DIR=/home/brucelau/workbench/dataset/leaf_photos
+DATASET_DIR=/home/liu1ee/workspace/LeafRecogition/leaf_photos
 
 # Download the pre-trained checkpoint.
 if [ ! -d "$PRETRAINED_CHECKPOINT_DIR" ]; then
@@ -39,9 +39,9 @@ python train_image_classifier.py \
   --checkpoint_path=${PRETRAINED_CHECKPOINT_DIR}/inception_v3.ckpt \
   --checkpoint_exclude_scopes=InceptionV3/Logits,InceptionV3/AuxLogits \
   --trainable_scopes=InceptionV3/Logits,InceptionV3/AuxLogits \
-  --max_number_of_steps=1000 \
+  --max_number_of_steps=4000 \
   --batch_size=32 \
-  --learning_rate=0.01 \
+  --learning_rate=0.888888 \
   --learning_rate_decay_type=fixed \
   --save_interval_secs=60 \
   --save_summaries_secs=60 \
@@ -53,7 +53,7 @@ python train_image_classifier.py \
     --checkpoint_path=${TRAIN_DIR} \
     --eval_dir=${TRAIN_DIR} \
     --dataset_name=flowers \
-    --dataset_split_name=validation \
+    --dataset_split_name=train \
     --dataset_dir=${DATASET_DIR} \
     --model_name=inception_v3
 
@@ -65,9 +65,9 @@ python train_image_classifier.py \
     --dataset_dir=${DATASET_DIR} \
     --model_name=inception_v3 \
     --checkpoint_path=${TRAIN_DIR} \
-    --max_number_of_steps=500 \
+    --max_number_of_steps=2000 \
     --batch_size=32 \
-    --learning_rate=0.0001 \
+    --learning_rate=0.1 \
     --learning_rate_decay_type=fixed \
     --save_interval_secs=60 \
     --save_summaries_secs=60 \
@@ -80,6 +80,6 @@ python train_image_classifier.py \
     --checkpoint_path=${TRAIN_DIR}/all \
     --eval_dir=${TRAIN_DIR}/all \
     --dataset_name=flowers \
-    --dataset_split_name=validation \
+    --dataset_split_name=train \
     --dataset_dir=${DATASET_DIR} \
     --model_name=inception_v3
